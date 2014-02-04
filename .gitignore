@@ -1,0 +1,10 @@
+/report/*
+/src/Makefile
+/src/*.cmi
+/src/*.cmo
+/src/*.mli
+/src/parser.ml
+/src/parser.mli
+/src/lexer.ml
+*~
+\#*\#
