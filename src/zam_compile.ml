@@ -14,16 +14,12 @@ let rec position (x : string) (venv : string list) : int =
 let rec compile ast venv =
   let rec apphelper ast venv =
     match ast with
-      | App(e1, e2) -> concat [(apphelper e2 venv); (compile e1 venv)]
+      | App(e1, e2) -> concat [(apphelper e2 venv); (apphelper e1 venv)]
       | _ -> compile ast venv
   in
 
   let rec helper ast venv =
-    let rec apphelper ast venv =
-      match ast with
-	| App(e1, e2) -> concat [(apphelper e2 venv); (compile e1 venv)]
-	| _ -> compile ast venv
-    in
+
     match ast with  
       | Var(x) -> [ZAM_Access (position x venv); ZAM_Return]
       | IntLit(n) -> [ZAM_Ldi(n); ZAM_Return]
@@ -43,7 +39,7 @@ let rec compile ast venv =
       | LetRec(f, x, e1, e2) ->
 	concat [[ZAM_Closure(helper e1 (x::f::venv))]; [ZAM_Let]; (helper e2 (f::venv))]
       | App(e1, e2) ->
-	concat [ (compile e2 venv); (apphelper e1 venv); [ZAM_TailApply]]
+	concat [ (compile e2 venv); (compile e1 venv); [ZAM_TailApply]]
       | Empty -> []
   in
 
@@ -57,6 +53,10 @@ let rec compile ast venv =
       concat [(compile e2 venv); (compile e1 venv); [ZAM_Minus]]
     | Eq(e1, e2) ->
       concat [(compile e2 venv); (compile e1 venv); [ZAM_Eq]]
+    | Greater(e1, e2) ->
+      concat [(compile e2 venv); (compile e1 venv); [ZAM_Greater]]
+    | Less(e1, e2) ->
+      concat [(compile e2 venv); (compile e1 venv); [ZAM_Less]]
     | Let(x, e1, e2) ->
       concat [(compile e1 venv); [ZAM_Let]; (compile e2 (x::venv)); [ZAM_EndLet]]
     | If(e1, e2, e3) ->
@@ -66,7 +66,7 @@ let rec compile ast venv =
     | LetRec(f, x, e1, e2) ->
       concat [[ZAM_Closure(helper e1 (x::f::venv))]; [ZAM_Let]; (compile e2 (f::venv)); [ZAM_EndLet]]
     | App(e1, e2) ->
-      concat [[ZAM_PushMark]; (compile e2 venv); (apphelper e1 venv); [ZAM_Apply]]
+      concat [[ZAM_PushMark]; (compile e2 venv); (compile e1 venv); [ZAM_Apply]]
 	
     | Empty -> []
 ;;

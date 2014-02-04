@@ -85,13 +85,13 @@ let rec zam_eval zam_code zam_env zam_stack zam_retst =
     | ZAM_Greater :: t ->
       begin match zam_stack with
 	| ZAM_IntVal(n1) :: ZAM_IntVal(n2) :: s ->
-	  zam_eval t zam_env (append [ZAM_BoolVal(n2>n1)] s) zam_retst
+	  zam_eval t zam_env (append [ZAM_BoolVal(n1>n2)] s) zam_retst
 	| _ -> failwith "Error in Greater"
       end
     | ZAM_Less :: t ->
       begin match zam_stack with
 	| ZAM_IntVal(n1) :: ZAM_IntVal(n2) :: s ->
-	  zam_eval t zam_env (append [ZAM_BoolVal(n2<n1)] s) zam_retst
+	  zam_eval t zam_env (append [ZAM_BoolVal(n1<n2)] s) zam_retst
 	| _ -> failwith "Error in Less"
       end
 	
@@ -122,7 +122,7 @@ let rec zam_eval zam_code zam_env zam_stack zam_retst =
 	    begin
 	      match zam_retst with
 		| ZAM_ClosVal(c, env) :: r-> 
-		  zam_eval c env (append [ZAM_ClosVal(t, zam_env)] s)  zam_retst
+		  zam_eval c env (append [ZAM_ClosVal(t, zam_env)] s) r
 	    end
 	  | v :: s -> 
 	    zam_eval t (append [v ; ZAM_ClosVal(t, zam_env)] zam_env) s zam_retst
@@ -134,17 +134,18 @@ let rec zam_eval zam_code zam_env zam_stack zam_retst =
 	  |v :: ZAM_Epsilon :: s -> 
 	    begin 
 		match zam_retst with
-		  | ZAM_ClosVal(c, env) :: r ->  zam_eval c env (append [v] s) zam_retst
+		  | ZAM_ClosVal(c, env) :: r ->  zam_eval c env (append [v] s) r
+		  | _ -> failwith "Error in ZAM_Retrun_1"
 	    end
 	  | ZAM_ClosVal(c, env) :: v :: s ->
 	    zam_eval c (append [v; ZAM_ClosVal(c, env)] env) s zam_retst
-	      
+	  | _ -> failwith "Error in ZAM_Retrun_2"
       end
 	
-    | _ ->
-      begin match zam_stack with
+    | _ -> zam_stack
+    (*  begin match zam_stack with
 	| v :: [] when zam_env = [] -> v
 	| _ -> failwith "Error" 
-      end
+      end*)
 ;;
 
