@@ -141,10 +141,10 @@ let rec zam_eval zam_code zam_env zam_stack zam_retst =
 	      
       end
 	
-    | _ -> zam_stack
-(*      begin match zam_stack with
+    | _ ->
+      begin match zam_stack with
 	| v :: [] when zam_env = [] -> v
 	| _ -> failwith "Error" 
-      end*)
+      end
 ;;
 
