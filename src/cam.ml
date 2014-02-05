@@ -25,7 +25,7 @@ and  cam_instr =
   | CAM_Less
 and cam_code = cam_instr list ;; 
 
-    (*実験テキストの表のc,c'はt,cに対応する*)
+
 let rec cam_eval cam_code cam_env cam_stack  =
   match cam_code with
     | CAM_Ldi(n) :: t -> cam_eval t cam_env (append [CAM_IntVal(n)] cam_stack)
