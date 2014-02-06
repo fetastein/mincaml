@@ -1,0 +1,8 @@
+# Eval.eval (Main.parse "let rec sum x = fun a -> if x = 0 then a else sum (x + (-1)) (x + a) in sum 10000 0") [] ;;
+Exception: Failure "integer value expected".
+
+# Cam.cam_eval (Compile.compile (Main.parse "1+(2=3)") []) [] [];;
+Exception: Failure "Error in Add".
+
+# (Zam.zam_eval  (Zam_compile.compile (Main.parse "1+(2=3)") []) [][][]);;
+Exception: Failure "Error in Add".

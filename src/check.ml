@@ -9,9 +9,9 @@ open Syntax ;;
   | Var of string
   | Fun of string * exp   (* fun x -> e *)
   | App of exp * exp      (* function application i.e. e e *)
-
-type ty = TInt | TBool | TArrow of ty * ty
 *)
+type ty = TInt | TBool | TArrow of ty * ty
+
 let ext env x v = (x,v) :: env;;
 
 let rec lookup x env =                                                           
@@ -155,5 +155,5 @@ let rec tcheck3 te e =
       let t2 = tcheck3 te e1 in
       let t3 = tcheck3 te e2 in
       t3
-(fun x -> if true then x else 100)(fun x -> if true then x else 100)(fun x -> if true then x else 100)(fun x -> if true then x else 100)    | _ -> failwith "unknown expression"
-(fun x -> if true then x else 100)(fun x -> if true then x else 100)(fun x -> if true then x else 100)
+    | _ -> failwith "unknown expression"
+;;
